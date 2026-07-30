@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------
+   Design tokens — campus wayfinding system
+   Inspired by physical campus signage: painted metal panels,
+   engraved building codes, directional arrows.
+--------------------------------------------------------- */
+:root {
+  --color-bg: #F6F3EC;           /* sandstone paper */
+  --color-surface: #FFFFFF;
+  --color-ink: #1E2A22;          /* near-black forest */
+  --color-forest: #1F4B3F;       /* primary — signage green */
+  --color-forest-dark: #163A30;
+  --color-amber: #E0952B;        /* wayfinding accent — "you are here" */
+  --color-line: #D8D2C2;         /* hairline / panel borders */
+  --color-muted: #6B7368;
+
+  --font-display: "Sk-Modernist", "Archivo", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "JetBrains Mono", monospace; /* building codes, coordinates */
+
+  --radius-panel: 2px;           /* signage is cut, not rounded */
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Utility: monospace "plate" for building codes / coordinates */
+.plate {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Respect reduced motion preference everywhere */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Visible keyboard focus, styled like a signage highlight */
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+}
