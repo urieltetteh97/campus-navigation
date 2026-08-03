@@ -7,6 +7,7 @@ import { TILE_LAYERS, type MapLayerId } from './tileLayers'
 import { createPlateIcon } from './markerIcon'
 import { LayerToggle } from './LayerToggle'
 import { LocateControl } from './LocateControl'
+import { MapErrorBoundary } from './MapErrorBoundary'
 
 // Campus centerpoint — see data/buildings.ts for the note on why building
 // coordinates are placeholders pending a real on-site survey.
@@ -17,11 +18,14 @@ const DEFAULT_ZOOM = 17
 function FlyToSelection({ location }: { location: CampusLocation | null }) {
   const map = useMap()
   useEffect(() => {
-    if (location) {
-      map.flyTo([location.coordinates.lat, location.coordinates.lng], Math.max(map.getZoom(), DEFAULT_ZOOM), {
-        duration: 0.6,
-      })
-    }
+    if (!location) return
+
+    const { lat, lng } = location.coordinates
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return
+
+    map.flyTo([lat, lng], Math.max(map.getZoom(), DEFAULT_ZOOM), {
+      duration: 0.6,
+    })
   }, [location, map])
   return null
 }
@@ -32,37 +36,39 @@ export function MapCanvas() {
 
   return (
     <div className="relative h-full min-h-[420px] w-full overflow-hidden rounded-[2px] border border-[var(--color-line)]">
-      <MapContainer
-        center={CAMPUS_CENTER}
-        zoom={DEFAULT_ZOOM}
-        scrollWheelZoom
-        className="h-full w-full"
-        style={{ background: 'var(--color-bg)' }}
-      >
-        <TileLayer
-          key={layer}
-          url={TILE_LAYERS[layer].url}
-          attribution={TILE_LAYERS[layer].attribution}
-          maxZoom={TILE_LAYERS[layer].maxZoom}
-        />
-        <FlyToSelection location={selectedLocation} />
-        <LocateControl />
+      <MapErrorBoundary>
+        <MapContainer
+          center={CAMPUS_CENTER}
+          zoom={DEFAULT_ZOOM}
+          scrollWheelZoom
+          className="h-full w-full"
+          style={{ background: 'var(--color-bg)' }}
+        >
+          <TileLayer
+            key={layer}
+            url={TILE_LAYERS[layer].url}
+            attribution={TILE_LAYERS[layer].attribution}
+            maxZoom={TILE_LAYERS[layer].maxZoom}
+          />
+          <FlyToSelection location={selectedLocation} />
+          <LocateControl />
 
-        {filteredLocations.map((location) => (
-          <Marker
-            key={location.id}
-            position={[location.coordinates.lat, location.coordinates.lng]}
-            icon={createPlateIcon(location.code, selectedLocation?.id === location.id)}
-            eventHandlers={{ click: () => selectLocation(location.id) }}
-          >
-            <Popup>
-              <strong>{location.name}</strong>
-              <br />
-              {location.code}
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
+          {filteredLocations.map((location) => (
+            <Marker
+              key={location.id}
+              position={[location.coordinates.lat, location.coordinates.lng]}
+              icon={createPlateIcon(location.code, selectedLocation?.id === location.id)}
+              eventHandlers={{ click: () => selectLocation(location.id) }}
+            >
+              <Popup>
+                <strong>{location.name}</strong>
+                <br />
+                {location.code}
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </MapErrorBoundary>
 
       <LayerToggle layer={layer} onChange={setLayer} />
     </div>
