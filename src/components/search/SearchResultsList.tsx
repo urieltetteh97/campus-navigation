@@ -20,7 +20,7 @@ export function SearchResultsList() {
             type="button"
             onClick={() => selectLocation(location.id)}
             aria-current={selectedLocation?.id === location.id}
-            className={`flex w-full items-start justify-between gap-3 px-1 py-3 text-left transition-colors ${
+            className={`flex w-full items-start justify-between gap-3 rounded-[6px] px-1 py-3 text-left transition-colors ${
               selectedLocation?.id === location.id ? 'bg-[var(--color-bg)]' : 'hover:bg-[var(--color-bg)]'
             }`}
           >
