@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+import { CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useCampusMap } from '@/context/CampusMapContext'
 import type { CampusLocation } from '@/types/campus'
@@ -31,8 +31,10 @@ function FlyToSelection({ location }: { location: CampusLocation | null }) {
 }
 
 export function MapCanvas() {
-  const { filteredLocations, selectedLocation, selectLocation } = useCampusMap()
+  const { filteredLocations, selectedLocation, selectLocation, route, destination } = useCampusMap()
   const [layer, setLayer] = useState<MapLayerId>('street')
+
+  const destinationVisible = Boolean(destination && filteredLocations.some((location) => location.id === destination.id))
 
   return (
     <div className="relative h-full min-h-[420px] w-full overflow-hidden rounded-[2px] border border-[var(--color-line)]">
@@ -53,6 +55,25 @@ export function MapCanvas() {
           <FlyToSelection location={selectedLocation} />
           <LocateControl />
 
+          {route && route.path.length > 1 && (
+            <>
+              <Polyline
+                positions={route.path.map(({ lat, lng }) => [lat, lng] as [number, number])}
+                pathOptions={{ color: '#f59e0b', weight: 5, opacity: 0.9, dashArray: '10,6' }}
+              />
+              <CircleMarker
+                center={[route.path[0].lat, route.path[0].lng]}
+                radius={6}
+                pathOptions={{ color: '#2563eb', fillColor: '#3b82f6', fillOpacity: 1 }}
+              />
+              <CircleMarker
+                center={[route.path[route.path.length - 1].lat, route.path[route.path.length - 1].lng]}
+                radius={6}
+                pathOptions={{ color: '#15803d', fillColor: '#16a34a', fillOpacity: 1 }}
+              />
+            </>
+          )}
+
           {filteredLocations.map((location) => (
             <Marker
               key={location.id}
@@ -67,6 +88,21 @@ export function MapCanvas() {
               </Popup>
             </Marker>
           ))}
+
+          {destination && !destinationVisible && (
+            <Marker
+              key={`dest-${destination.id}`}
+              position={[destination.coordinates.lat, destination.coordinates.lng]}
+              icon={createPlateIcon(destination.code, true)}
+              eventHandlers={{ click: () => selectLocation(destination.id) }}
+            >
+              <Popup>
+                <strong>{destination.name}</strong>
+                <br />
+                {destination.code}
+              </Popup>
+            </Marker>
+          )}
         </MapContainer>
       </MapErrorBoundary>
 

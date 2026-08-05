@@ -1,6 +1,8 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
 import { buildings } from '@/data/buildings'
-import type { CampusLocation, SearchFilters } from '@/types/campus'
+import { useDirections } from '@/hooks/useDirections'
+import { useGeolocation } from '@/hooks/useGeolocation'
+import type { CampusLocation, CampusRoute, SearchFilters } from '@/types/campus'
 
 interface CampusMapState {
   locations: CampusLocation[]
@@ -11,7 +13,13 @@ interface CampusMapState {
   filteredLocations: CampusLocation[]
   destination: CampusLocation | null
   setDestination: (location: CampusLocation | null) => void
+  userPosition: { lat: number; lng: number } | null
+  requestLocation: () => void
+  origin: CampusLocation
+  route: CampusRoute | null
 }
+
+const DEFAULT_ORIGIN = buildings.find((b) => b.id === 'main-gate') ?? buildings[0]
 
 const CampusMapContext = createContext<CampusMapState | undefined>(undefined)
 
@@ -19,6 +27,7 @@ export function CampusMapProvider({ children }: { children: ReactNode }) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [destination, setDestination] = useState<CampusLocation | null>(null)
   const [filters, setFilters] = useState<SearchFilters>({ query: '', categories: [] })
+  const { position, requestLocation } = useGeolocation()
 
   const selectedLocation = useMemo(
     () => buildings.find((b) => b.id === selectedId) ?? null,
@@ -38,6 +47,19 @@ export function CampusMapProvider({ children }: { children: ReactNode }) {
     })
   }, [filters])
 
+  const origin = useMemo<CampusLocation>(() => {
+    if (!position) return DEFAULT_ORIGIN
+
+    return {
+      ...DEFAULT_ORIGIN,
+      id: 'you',
+      name: 'Your location',
+      coordinates: position,
+    }
+  }, [position])
+
+  const route = useDirections(origin, destination)
+
   const value: CampusMapState = {
     locations: buildings,
     selectedLocation,
@@ -47,6 +69,10 @@ export function CampusMapProvider({ children }: { children: ReactNode }) {
     filteredLocations,
     destination,
     setDestination,
+    userPosition: position,
+    requestLocation,
+    origin,
+    route,
   }
 
   return <CampusMapContext.Provider value={value}>{children}</CampusMapContext.Provider>

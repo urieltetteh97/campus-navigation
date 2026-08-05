@@ -48,6 +48,8 @@ export interface CampusRoute {
   originId: string
   destinationId: string
   steps: RouteStep[]
+  path: Coordinates[]
+  waypoints: Coordinates[]
   totalDistanceMeters: number
   estimatedMinutes: number
   mode: 'walking' | 'accessible'

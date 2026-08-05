@@ -1,21 +1,8 @@
-import { buildings } from '@/data/buildings'
 import { useCampusMap } from '@/context/CampusMapContext'
-import { useDirections } from '@/hooks/useDirections'
-import { useGeolocation } from '@/hooks/useGeolocation'
-
-// Fallback origin when the visitor hasn't shared their location yet —
-// the main gate, where most visitors actually start.
-const DEFAULT_ORIGIN = buildings.find((b) => b.id === 'main-gate') ?? buildings[0]
 
 export function DirectionsPanel() {
-  const { destination, setDestination } = useCampusMap()
-  const { position, requestLocation, loading } = useGeolocation()
-
-  const origin = position
-    ? { ...DEFAULT_ORIGIN, id: 'you', name: 'Your location', coordinates: position }
-    : DEFAULT_ORIGIN
-
-  const route = useDirections(origin, destination)
+  const { destination, setDestination, origin, route, userPosition, requestLocation } = useCampusMap()
+  const isUsingCurrentLocation = Boolean(userPosition)
 
   if (!destination) return null
 
@@ -34,20 +21,19 @@ export function DirectionsPanel() {
         </button>
       </div>
 
-      {!position && (
+      {!isUsingCurrentLocation && (
         <button
           type="button"
           onClick={requestLocation}
-          disabled={loading}
           className="mt-2 rounded-[2px] border border-[var(--color-forest)] px-3 py-1.5 text-xs font-medium text-[var(--color-forest)] hover:bg-[var(--color-forest)] hover:text-white"
         >
-          {loading ? 'Locating…' : 'Use my current location'}
+          Use my current location
         </button>
       )}
 
-      {!position && (
+      {!isUsingCurrentLocation && (
         <p className="mt-2 text-xs text-[var(--color-muted)]">
-          Showing directions from {DEFAULT_ORIGIN.name} until you share your location.
+          Showing directions from {origin.name} until you share your location.
         </p>
       )}
 
@@ -55,6 +41,9 @@ export function DirectionsPanel() {
         <div className="mt-3 space-y-2">
           <p className="text-xs text-[var(--color-muted)]">
             ~{route.estimatedMinutes} min walk · {route.totalDistanceMeters} m
+          </p>
+          <p className="text-xs text-[var(--color-muted)]">
+            The route is also shown on the map with {route.waypoints.length} waypoint{route.waypoints.length === 1 ? '' : 's'}.
           </p>
           <ol className="space-y-2">
             {route.steps.map((step, i) => (

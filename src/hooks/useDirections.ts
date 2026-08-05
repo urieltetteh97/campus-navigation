@@ -18,6 +18,12 @@ function haversineMeters(a: CampusLocation, b: CampusLocation) {
   return 2 * R * Math.asin(Math.sqrt(h))
 }
 
+function createWaypoint(origin: CampusLocation, destination: CampusLocation) {
+  const midLat = (origin.coordinates.lat + destination.coordinates.lat) / 2
+  const midLng = (origin.coordinates.lng + destination.coordinates.lng) / 2
+  return { lat: midLat, lng: midLng }
+}
+
 /**
  * Produces a straight-line walking estimate between two locations.
  * This is a placeholder for a real pathfinding engine (e.g. a pedestrian
@@ -30,6 +36,8 @@ export function useDirections(origin: CampusLocation | null, destination: Campus
 
     const distanceMeters = Math.round(haversineMeters(origin, destination))
     const estimatedMinutes = Math.max(1, Math.round(distanceMeters / AVERAGE_WALK_SPEED_MPS / 60))
+    const waypoint = createWaypoint(origin, destination)
+    const path = [origin.coordinates, waypoint, destination.coordinates]
 
     return {
       originId: origin.id,
@@ -37,11 +45,18 @@ export function useDirections(origin: CampusLocation | null, destination: Campus
       totalDistanceMeters: distanceMeters,
       estimatedMinutes,
       mode: 'walking',
+      path,
+      waypoints: [waypoint],
       steps: [
         {
           instruction: `Head toward ${destination.name} (${destination.code}) from ${origin.name}.`,
-          distanceMeters,
+          distanceMeters: Math.round(haversineMeters(origin, { ...origin, coordinates: waypoint })),
           cue: 'Follow the main pathway signage.',
+        },
+        {
+          instruction: `Continue toward ${destination.name} and arrive at your destination.`,
+          distanceMeters: Math.round(haversineMeters({ ...origin, coordinates: waypoint }, destination)),
+          cue: `Use the next turn or pathway toward ${destination.name}.`,
         },
         {
           instruction: `Arrive at ${destination.name}.`,
