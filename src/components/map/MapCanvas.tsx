@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css'
 import { useCampusMap } from '@/context/CampusMapContext'
 import type { CampusLocation } from '@/types/campus'
 import { TILE_LAYERS, type MapLayerId } from './tileLayers'
-import { createPlateIcon } from './markerIcon'
+import { createPlateIcon, createUserIcon } from './markerIcon'
 import { LayerToggle } from './LayerToggle'
 import { LocateControl } from './LocateControl'
 import { MapErrorBoundary } from './MapErrorBoundary'
@@ -31,10 +31,11 @@ function FlyToSelection({ location }: { location: CampusLocation | null }) {
 }
 
 export function MapCanvas() {
-  const { filteredLocations, selectedLocation, selectLocation, route, destination } = useCampusMap()
+  const { filteredLocations, selectedLocation, selectLocation, route, destination, userPosition } = useCampusMap()
   const [layer, setLayer] = useState<MapLayerId>('street')
 
   const destinationVisible = Boolean(destination && filteredLocations.some((location) => location.id === destination.id))
+  const isUsingCurrentLocation = Boolean(userPosition)
 
   return (
     <div className="relative h-full min-h-[420px] w-full overflow-hidden rounded-[2px] border border-[var(--color-line)]">
@@ -61,11 +62,13 @@ export function MapCanvas() {
                 positions={route.path.map(({ lat, lng }) => [lat, lng] as [number, number])}
                 pathOptions={{ color: '#f59e0b', weight: 5, opacity: 0.9, dashArray: '10,6' }}
               />
-              <CircleMarker
-                center={[route.path[0].lat, route.path[0].lng]}
-                radius={6}
-                pathOptions={{ color: '#2563eb', fillColor: '#3b82f6', fillOpacity: 1 }}
-              />
+              {!isUsingCurrentLocation && (
+                <CircleMarker
+                  center={[route.path[0].lat, route.path[0].lng]}
+                  radius={6}
+                  pathOptions={{ color: '#2563eb', fillColor: '#3b82f6', fillOpacity: 1 }}
+                />
+              )}
               <CircleMarker
                 center={[route.path[route.path.length - 1].lat, route.path[route.path.length - 1].lng]}
                 radius={6}
@@ -102,6 +105,24 @@ export function MapCanvas() {
                 {destination.code}
               </Popup>
             </Marker>
+          )}
+
+          {userPosition && (
+            <>
+              <CircleMarker
+                center={[userPosition.lat, userPosition.lng]}
+                radius={14}
+                pathOptions={{ color: '#2563eb', fillColor: '#60a5fa', fillOpacity: 0.15, weight: 2 }}
+              />
+              <Marker
+                position={[userPosition.lat, userPosition.lng]}
+                icon={createUserIcon()}
+              >
+                <Popup>
+                  <strong>Your location</strong>
+                </Popup>
+              </Marker>
+            </>
           )}
         </MapContainer>
       </MapErrorBoundary>
