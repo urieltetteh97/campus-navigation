@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useCampusMap } from '@/context/CampusMapContext'
+import { useCampusMap } from '@/context/useCampusMap'
 import { CategoryFilters } from '@/components/search/CategoryFilters'
 import { SearchResultsList } from '@/components/search/SearchResultsList'
 import { LocationDetailPanel } from '@/components/directions/LocationDetailPanel'

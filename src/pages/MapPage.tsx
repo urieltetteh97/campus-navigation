@@ -6,7 +6,7 @@ import { SearchResultsList } from '@/components/search/SearchResultsList'
 import { MapCanvas } from '@/components/map/MapCanvas'
 import { LocationDetailPanel } from '@/components/directions/LocationDetailPanel'
 import { DirectionsPanel } from '@/components/directions/DirectionsPanel'
-import { useCampusMap } from '@/context/CampusMapContext'
+import { useCampusMap } from '@/context/useCampusMap'
 
 export function MapPage() {
   const { destination } = useCampusMap()

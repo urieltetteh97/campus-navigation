@@ -1,5 +1,5 @@
 import { categoryLabels } from '@/data/buildings'
-import { useCampusMap } from '@/context/CampusMapContext'
+import { useCampusMap } from '@/context/useCampusMap'
 import type { LocationCategory } from '@/types/campus'
 
 export function CategoryFilters() {

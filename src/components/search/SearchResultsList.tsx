@@ -1,5 +1,5 @@
 import { categoryLabels } from '@/data/buildings'
-import { useCampusMap } from '@/context/CampusMapContext'
+import { useCampusMap } from '@/context/useCampusMap'
 
 export function SearchResultsList() {
   const { filteredLocations, selectLocation, selectedLocation, setDestination } = useCampusMap()

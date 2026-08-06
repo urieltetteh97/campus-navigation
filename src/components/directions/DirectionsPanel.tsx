@@ -1,4 +1,4 @@
-import { useCampusMap } from '@/context/CampusMapContext'
+import { useCampusMap } from '@/context/useCampusMap'
 
 export function DirectionsPanel() {
   const { destination, setDestination, origin, route, userPosition, requestLocation } = useCampusMap()

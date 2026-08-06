@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useMemo, useState, type ReactNode } from 'react'
 import { buildings } from '@/data/buildings'
 import { useDirections } from '@/hooks/useDirections'
 import { useGeolocation } from '@/hooks/useGeolocation'
@@ -23,7 +23,7 @@ interface CampusMapState {
 
 const DEFAULT_ORIGIN = buildings.find((b) => b.id === 'main-gate') ?? buildings[0]
 
-const CampusMapContext = createContext<CampusMapState | undefined>(undefined)
+export const CampusMapContext = createContext<CampusMapState | undefined>(undefined)
 
 export function CampusMapProvider({ children }: { children: ReactNode }) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -83,8 +83,3 @@ export function CampusMapProvider({ children }: { children: ReactNode }) {
   return <CampusMapContext.Provider value={value}>{children}</CampusMapContext.Provider>
 }
 
-export function useCampusMap() {
-  const ctx = useContext(CampusMapContext)
-  if (!ctx) throw new Error('useCampusMap must be used within a CampusMapProvider')
-  return ctx
-}

@@ -1,4 +1,4 @@
-import { useCampusMap } from '@/context/CampusMapContext'
+import { useCampusMap } from '@/context/useCampusMap'
 
 export function SearchBar() {
   const { filters, setFilters } = useCampusMap()

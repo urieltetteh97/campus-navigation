@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useCampusMap } from '@/context/CampusMapContext'
+import { useCampusMap } from '@/context/useCampusMap'
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)

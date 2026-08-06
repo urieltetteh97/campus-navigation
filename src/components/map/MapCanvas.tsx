@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import { useCampusMap } from '@/context/CampusMapContext'
+import { useCampusMap } from '@/context/useCampusMap'
 import type { CampusLocation } from '@/types/campus'
 import { TILE_LAYERS, type MapLayerId } from './tileLayers'
 import { createPlateIcon, createUserIcon } from './markerIcon'
