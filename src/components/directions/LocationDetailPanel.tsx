@@ -44,7 +44,7 @@ export function LocationDetailPanel() {
         onClick={() => setDestination(selectedLocation)}
         className="mt-auto rounded-[2px] bg-[var(--color-amber)] px-4 py-2 text-sm font-medium text-white hover:brightness-95"
       >
-        Get directions here
+        Navigate here
       </button>
     </div>
   )
