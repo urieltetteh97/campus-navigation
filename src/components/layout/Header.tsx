@@ -44,8 +44,7 @@ export function Header() {
         {menuOpen && (
           <div className="absolute right-4 top-full mt-2 w-40 rounded-[4px] border border-[var(--color-line)] bg-white text-[var(--color-ink)] shadow-lg">
             <a href="#map" className="block px-4 py-2 text-sm hover:bg-[var(--color-bg)]">Map</a>
-            <a href="#directions" className="block px-4 py-2 text-sm hover:bg-[var(--color-bg)]">Directions</a>
-            <a href="#help" className="block px-4 py-2 text-sm hover:bg-[var(--color-bg)]">Visitor help</a>
+            <a href="#help" className="block px-4 py-2 text-sm hover:bg-[var(--color-bg)]">Shuttle Routes</a>
           </div>
         )}
       </div>
