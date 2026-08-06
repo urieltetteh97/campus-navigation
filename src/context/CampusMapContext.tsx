@@ -17,6 +17,8 @@ interface CampusMapState {
   requestLocation: () => void
   origin: CampusLocation
   route: CampusRoute | null
+  mobileSheetOpen: boolean
+  setMobileSheetOpen: (open: boolean) => void
 }
 
 const DEFAULT_ORIGIN = buildings.find((b) => b.id === 'main-gate') ?? buildings[0]
@@ -59,6 +61,7 @@ export function CampusMapProvider({ children }: { children: ReactNode }) {
   }, [position])
 
   const route = useDirections(origin, destination)
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false)
 
   const value: CampusMapState = {
     locations: buildings,
@@ -73,6 +76,8 @@ export function CampusMapProvider({ children }: { children: ReactNode }) {
     requestLocation,
     origin,
     route,
+    mobileSheetOpen,
+    setMobileSheetOpen,
   }
 
   return <CampusMapContext.Provider value={value}>{children}</CampusMapContext.Provider>
