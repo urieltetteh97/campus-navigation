@@ -17,6 +17,8 @@ interface CampusMapState {
   requestLocation: () => void
   loading: boolean
   error: string | null
+  showShuttleRoute: boolean
+  setShowShuttleRoute: (show: boolean) => void
   origin: CampusLocation
   route: CampusRoute | null
   mobileSheetOpen: boolean
@@ -64,6 +66,7 @@ export function CampusMapProvider({ children }: { children: ReactNode }) {
 
   const route = useDirections(origin, destination)
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false)
+  const [showShuttleRoute, setShowShuttleRoute] = useState(false)
 
   const value: CampusMapState = {
     locations: buildings,
@@ -78,6 +81,8 @@ export function CampusMapProvider({ children }: { children: ReactNode }) {
     requestLocation,
     loading,
     error,
+    showShuttleRoute,
+    setShowShuttleRoute,
     origin,
     route,
     mobileSheetOpen,

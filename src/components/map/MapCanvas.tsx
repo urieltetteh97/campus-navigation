@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { CircleMarker, MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useCampusMap } from '@/context/useCampusMap'
+import { buildings } from '@/data/buildings'
 import type { CampusLocation } from '@/types/campus'
 import { TILE_LAYERS, type MapLayerId } from './tileLayers'
 import { createPlateIcon, createUserIcon } from './markerIcon'
@@ -31,11 +32,26 @@ function FlyToSelection({ location }: { location: CampusLocation | null }) {
 }
 
 export function MapCanvas() {
-  const { filteredLocations, selectedLocation, selectLocation, route, destination, userPosition } = useCampusMap()
+  const { filteredLocations, selectedLocation, selectLocation, route, destination, userPosition, showShuttleRoute } = useCampusMap()
   const [layer, setLayer] = useState<MapLayerId>('street')
 
   const destinationVisible = Boolean(destination && filteredLocations.some((location) => location.id === destination.id))
   const isUsingCurrentLocation = Boolean(userPosition)
+
+  const shuttleStops = useMemo(
+    () => [
+      buildings.find((location) => location.id === 'atwima-hall'),
+      buildings.find((location) => location.id === 'admin-block'),
+      buildings.find((location) => location.id === 'opoku-ware-ii-hall'),
+      buildings.find((location) => location.id === 'main-library'),
+    ].filter(Boolean) as CampusLocation[],
+    [],
+  )
+
+  const shuttlePath = useMemo(
+    () => shuttleStops.map((stop) => [stop.coordinates.lat, stop.coordinates.lng] as [number, number]),
+    [shuttleStops],
+  )
 
   return (
     <div className="relative h-full min-h-[420px] w-full overflow-hidden rounded-[2px] border border-[var(--color-line)]">
@@ -105,6 +121,27 @@ export function MapCanvas() {
                 {destination.code}
               </Popup>
             </Marker>
+          )}
+
+          {showShuttleRoute && (
+            <>
+              <Polyline
+                positions={shuttlePath}
+                pathOptions={{ color: '#1d4ed8', weight: 5, opacity: 0.85 }}
+              />
+              {shuttleStops.map((stop) => (
+                <Marker
+                  key={`shuttle-${stop.id}`}
+                  position={[stop.coordinates.lat, stop.coordinates.lng]}
+                  icon={createPlateIcon(stop.code, false)}
+                >
+                  <Popup>
+                    <strong>{stop.name}</strong>
+                    <br />Shuttle stop
+                  </Popup>
+                </Marker>
+              ))}
+            </>
           )}
 
           {userPosition && (

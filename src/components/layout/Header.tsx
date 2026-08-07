@@ -3,7 +3,7 @@ import { useCampusMap } from '@/context/useCampusMap'
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const { setMobileSheetOpen } = useCampusMap()
+  const { setMobileSheetOpen, showShuttleRoute, setShowShuttleRoute } = useCampusMap()
 
   return (
     <header className="relative flex items-center justify-between border-b border-[var(--color-line)] bg-[var(--color-forest)] px-4 py-3 text-white sm:px-6">
@@ -18,9 +18,15 @@ export function Header() {
           <p className="text-xs text-white/70">Tanoso Campus, Kumasi — visitor wayfinding</p>
         </div>
       </div>
-      <nav className="hidden gap-10 text-sm text-white/80 sm:flex">
+      <nav className="hidden gap-3 text-sm text-white/80 sm:flex">
         <a href="#map" className="hover:text-white hover:bg-amber-500 rounded-[6px] px-3.5 py-1.5 transition-all duration-200">Map</a>
-        <a href="#shuttleroutes" className="hover:text-white hover:bg-amber-500 rounded-[6px] px-3.5 py-1.5 transition-all duration-200">Shuttle Routes</a>
+        <button
+          type="button"
+          onClick={() => setShowShuttleRoute(!showShuttleRoute)}
+          className={`rounded-[6px] px-3.5 py-1.5 transition-all duration-200 ${showShuttleRoute ? 'bg-white text-[var(--color-forest)]' : 'hover:text-white hover:bg-amber-500'}`}
+        >
+          Shuttle Routes
+        </button>
       </nav>
 
       {/* Mobile actions: Locations open the bottom sheet, menu toggles nav links */}
@@ -41,9 +47,18 @@ export function Header() {
           ☰
         </button>
         {menuOpen && (
-          <div className="absolute right-4 top-full mt-2 w-40 rounded-[4px] border border-[var(--color-line)] bg-white text-[var(--color-ink)] shadow-lg">
+          <div className="absolute right-4 top-full mt-2 w-44 rounded-[4px] border border-[var(--color-line)] bg-white text-[var(--color-ink)] shadow-lg">
             <a href="#map" className="block px-4 py-2 text-sm hover:bg-[var(--color-bg)]">Map</a>
-            <a href="#help" className="block px-4 py-2 text-sm hover:bg-[var(--color-bg)]">Shuttle Routes</a>
+            <button
+              type="button"
+              onClick={() => {
+                setShowShuttleRoute(!showShuttleRoute)
+                setMenuOpen(false)
+              }}
+              className="block w-full text-left px-4 py-2 text-sm text-[var(--color-ink)] hover:bg-[var(--color-bg)]"
+            >
+              Shuttle Routes
+            </button>
           </div>
         )}
       </div>
