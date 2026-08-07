@@ -20,8 +20,7 @@ export function Header() {
       </div>
       <nav className="hidden gap-10 text-sm text-white/80 sm:flex">
         <a href="#map" className="hover:text-white hover:bg-amber-500 rounded-[6px] px-3.5 py-1.5 transition-all duration-200">Map</a>
-        <a href="#directions" className="hover:text-white hover:bg-amber-500 rounded-[6px] px-3.5 py-1.5 transition-all duration-200">Directions</a>
-        <a href="#help" className="hover:text-white hover:bg-amber-500 rounded-[6px] px-3.5 py-1.5 transition-all duration-200">Visitor help</a>
+        <a href="#shuttleroutes" className="hover:text-white hover:bg-amber-500 rounded-[6px] px-3.5 py-1.5 transition-all duration-200">Shuttle Routes</a>
       </nav>
 
       {/* Mobile actions: Locations open the bottom sheet, menu toggles nav links */}
