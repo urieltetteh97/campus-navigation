@@ -1,16 +1,16 @@
 import { useEffect } from 'react'
 import { useMap } from 'react-leaflet'
-import { useGeolocation } from '@/hooks/useGeolocation'
+import { useCampusMap } from '@/context/useCampusMap'
 
 export function LocateControl() {
   const map = useMap()
-  const { position, requestLocation, loading, error } = useGeolocation()
+  const { userPosition, requestLocation, loading, error } = useCampusMap()
 
   useEffect(() => {
-    if (position) {
-      map.flyTo([position.lat, position.lng], 18)
+    if (userPosition) {
+      map.flyTo([userPosition.lat, userPosition.lng], 18)
     }
-  }, [position, map])
+  }, [userPosition, map])
 
   return (
     <div className="absolute bottom-[68px] right-3 z-[1000] flex flex-col items-end gap-1 lg:bottom-3">

@@ -15,6 +15,8 @@ interface CampusMapState {
   setDestination: (location: CampusLocation | null) => void
   userPosition: { lat: number; lng: number } | null
   requestLocation: () => void
+  loading: boolean
+  error: string | null
   origin: CampusLocation
   route: CampusRoute | null
   mobileSheetOpen: boolean
@@ -29,7 +31,7 @@ export function CampusMapProvider({ children }: { children: ReactNode }) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [destination, setDestination] = useState<CampusLocation | null>(null)
   const [filters, setFilters] = useState<SearchFilters>({ query: '', categories: [] })
-  const { position, requestLocation } = useGeolocation()
+  const { position, requestLocation, loading, error } = useGeolocation()
 
   const selectedLocation = useMemo(
     () => buildings.find((b) => b.id === selectedId) ?? null,
@@ -74,6 +76,8 @@ export function CampusMapProvider({ children }: { children: ReactNode }) {
     setDestination,
     userPosition: position,
     requestLocation,
+    loading,
+    error,
     origin,
     route,
     mobileSheetOpen,
