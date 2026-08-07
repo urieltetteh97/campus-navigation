@@ -49,8 +49,19 @@ export function MapCanvas() {
   )
 
   const shuttlePath = useMemo(
-    () => shuttleStops.map((stop) => [stop.coordinates.lat, stop.coordinates.lng] as [number, number]),
-    [shuttleStops],
+    () => [
+      [6.69673, -1.67950], // Atwima Hall
+      [6.69680, -1.68020], // road south-west from Atwima Hall
+      [6.69691, -1.68141], // Administration Block
+      [6.69705, -1.68170], // continue along the road
+      [6.69735, -1.68235], // right turn toward Opoku Ware II Hall
+      [6.69783, -1.68293], // Opoku Ware II Hall
+      [6.69820, -1.68305], // road toward the library
+      [6.69930, -1.68290],
+      [6.70020, -1.68285],
+      [6.70070, -1.68280], // Library
+    ] as [number, number][],
+    [],
   )
 
   return (
