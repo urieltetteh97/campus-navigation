@@ -182,6 +182,15 @@ export const buildings: CampusLocation[] = [
     hours: '6:00 AM – 7:00 PM',
   },
   {
+    id: 'new-lecture-block',
+    name: 'New Lecture Block',
+    code: 'NLB',
+    category: 'academic',
+    coordinates: { lat: 6.702103109064247, lng: -1.683113519138146},
+    description: 'Parking near the main gate for visitors and guests.',
+    accessibility: { stepFreeEntrance: true },
+  },
+  {
     id: 'visitor-parking',
     name: 'Visitor Parking Area',
     code: 'PK-1',
