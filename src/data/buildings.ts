@@ -187,7 +187,7 @@ export const buildings: CampusLocation[] = [
     code: 'NLB',
     category: 'academic',
     coordinates: { lat: 6.702103109064247, lng: -1.683113519138146},
-    description: 'Parking near the main gate for visitors and guests.',
+    description: 'New Lecture Block',
     accessibility: { stepFreeEntrance: true },
   },
   {
